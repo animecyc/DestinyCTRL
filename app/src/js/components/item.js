@@ -4,7 +4,9 @@ define([
 ], function(Component, Tooltip) {
   return Component.subclass({
     constructor : function(item) {
-      var props = {};
+      var props = {
+        dimmed : false
+      };
 
       Object.keys(item).forEach(function(key) {
         if(typeof item[key] !== 'function') {
@@ -90,13 +92,17 @@ define([
     },
 
     primaryStatView : function() {
+      var stats = this.get('stats');
       var primaryStatId = this.get('primaryStatId');
+      var primaryStat = stats[primaryStatId];
 
-      if(primaryStatId) {
-        var primaryStat = this.get('stats')[primaryStatId];
+      if(primaryStat) {
         var damage = this.get('damage');
+        var heroClasses = ['heroStat'];
 
-        return m('div.heroStat' + (damage ? '.damageType' + damage.type : ''), [
+        if(damage) { heroClasses.push('damageType' + damage.type); }
+
+        return m('div.' + heroClasses.join('.'), [
           damage ?
             m('div.damageType', {
               style : {
@@ -112,48 +118,56 @@ define([
       }
     },
 
-    setDimming : function(dimming) {
-      this.dimmed = !! dimming;
+    setDimming : function(dimmed) {
+      this.set('dimmed', dimmed);
     },
 
     view : function() {
-      var stackable = this.item.isStackable();
-      var complete = this.item.isComplete();
-      var description = this.get('description');
       var type = this.get('type');
       var tier = this.get('tier');
-      var tierName = tier.name;
-      var hasStats = this.get('stats') &&
-        (this.item.isWeapon() || this.item.isArmor());
-      var hasDetails = description || hasStats;
-      var dimmed = this.dimmed;
 
-      return m('div.item' + (dimmed ? '.dimmed' : ''), {
-        config : function(el, redraw, ctx) {
-          if(! redraw) {
-            ctx.tooltip = new Tooltip(
-              el,
-              el.querySelector('.itemTooltip'),
-              100
-            );
+      var itemName = this.get('name');
+      var tierName = tier.name;
+      var typeName = type.name;
+      var itemDesc = this.get('description');
+      var iconUrl = this.get('icon');
+      var stackSize = this.get('stackSize') || 1;
+
+      var isStackable = this.item.isStackable();
+      var isComplete = this.item.isComplete();
+      var isDimmed = this.get('dimmed');
+      var hasStats = !! this.get('stats');
+      var hasDetails = itemDesc || hasStats;
+
+      var itemClasses = ['item'];
+
+      if(isDimmed) { itemClasses.push('dimmed'); }
+      if(isComplete) { itemClasses.push('complete'); }
+
+      return m('div.' + itemClasses.join('.'), {
+        config : function(el, initialized) {
+          if(! initialized) {
+            var tooltip = el.querySelector('.itemTooltip');
+
+            new Tooltip(el, tooltip, 100);
           }
         }
       }, [
-        m('div.iconWrapper' + (complete ? '.complete' : ''), [
+        m('div.iconWrapper', [
           m('img.icon', {
-            src : this.get('icon'),
+            src : iconUrl,
             width : 46,
             height : 46
           }),
         ]),
-        stackable ?
-          m('div.stack', this.get('stackSize') || 1) :
+        isStackable ?
+          m('div.stack', stackSize) :
           void 0,
         m('div.itemTooltip.tier' + tierName, [
           m('div.header', [
-            m('div.name', this.get('name')),
+            m('div.name', itemName),
             m('div.meta', [
-              m('div.type', type.name),
+              m('div.type', typeName),
               m('div.tier', tierName)
             ])
           ]),
@@ -162,7 +176,7 @@ define([
               hasStats ?
                 this.primaryStatView() :
                 void 0,
-              m('div.description', description),
+              m('div.description', itemDesc),
               hasStats ?
                 m('div.stats',
                   this.item.isWeapon() ?
