@@ -50,25 +50,29 @@
 
   .character-about {
     color: #fff;
+
     .class {
       position: absolute;
       top: 12px;
       left: 65px;
       font-size: 24px;
     }
+
     .race {
       position: absolute;
       top: 35px;
       left: 65px;
       font-size: 16px;
     }
+
     .level {
       position: absolute;
       top: 20px;
       right: 10px;
       font-size: 28px;
     }
-    .light { color: #EFDD56; }
+
+    .prestige { color: #EFDD56; }
   }
 
   .character-equipment {
