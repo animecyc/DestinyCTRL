@@ -1,6 +1,6 @@
 define([
   'common/component',
-  'common/tooltip'
+  'libraries/tooltip'
 ], function(Component, Tooltip) {
   return Component.subclass({
     constructor : function(item) {
@@ -125,6 +125,7 @@ define([
     view : function() {
       var type = this.get('type');
       var tier = this.get('tier');
+      var stats = this.get('stats');
 
       var itemName = this.get('name');
       var tierName = tier.name;
@@ -136,8 +137,8 @@ define([
       var isStackable = this.item.isStackable();
       var isComplete = this.item.isComplete();
       var isDimmed = this.get('dimmed');
-      var hasStats = !! this.get('stats');
-      var hasDetails = itemDesc || hasStats;
+      var hasStats = stats ? !! Object.keys(stats).length : false;
+      var hasDetails = !! itemDesc || hasStats;
 
       var itemClasses = ['item'];
 
