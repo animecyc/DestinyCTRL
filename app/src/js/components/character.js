@@ -6,14 +6,17 @@ define([
   return Component.subclass({
     constructor : function(character) {
       this.set({
-        initialized : false,
-        character : character
+        initialized : false
       }, true);
+
+      this.extend({
+        character : character
+      });
     },
 
     sync : function() {
       var self = this;
-      var character = this.get('character');
+      var character = this.character;
 
       m.startComputation();
 
@@ -21,12 +24,12 @@ define([
         self.set({
           initialized : true,
           level : character.level,
-          light : character.isPrestige,
           banner : character.background,
           emblem : character.emblem,
           class : character.characterClass.name,
           race : character.characterClass.race,
           gender : character.characterClass.gender,
+          isPrestige : character.isPrestige,
           equipment : []
         }, true);
 
@@ -51,24 +54,30 @@ define([
         return void 0;
       }
 
-      var light = (this.get('light') ? 'light' : '');
+      var charLevel = this.get('level');
+      var charGender = this.get('gender');
+      var charRace = this.get('race');
+      var charBanner = this.get('banner');
+      var charEmblem = this.get('emblem');
+      var charClass = this.get('class');
+      var isPrestige = this.get('isPrestige');
 
       return m('div.character.twelve', [
         m('div.character-details.four', [
           m('div.character-header', {
             style : {
-              backgroundImage : 'url(' + this.get('banner') + ')'
+              backgroundImage : 'url(' + charBanner + ')'
             }
           }, [
             m('img.character-emblem', {
-              src : this.get('emblem'),
+              src : charEmblem,
               width : 50,
               height : 50
             }),
             m('div.character-about', [
-              m('div.class', this.get('class')),
-              m('div.race', this.get('race') + ' ' + this.get('gender')),
-              m('div.level.'+light, this.get('level')),
+              m('div.class', charClass),
+              m('div.race',  [charRace, charGender].join(' ')),
+              m('div.level.' + (isPrestige ? 'prestige' : ''), charLevel),
             ])
           ]),
           m('div.character-equipment', [
