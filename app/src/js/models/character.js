@@ -23,6 +23,11 @@ define([
     'BUCKET_SHADER', 'BUCKET_EMBLEM'
   ];
 
+  var activityTypes = [
+    'ACTIVITY_TYPE_NIGHTFALL', 'ACTIVITY_TYPE_RAID',
+    'STRIKE_WEEKLY'
+  ];
+
   function Character(account, data) {
     this.account = account;
 
@@ -36,7 +41,8 @@ define([
   Character.prototype.sync = function() {
     return Promise.all([
       this._syncClass(),
-      this._syncInventory()
+      this._syncInventory(),
+      this._syncActivities()
     ]);
   };
 
@@ -223,6 +229,36 @@ define([
           self.buckets.push(new Bucket(definitions, bucket));
         });
       });
+    });
+  };
+
+  Character.prototype._syncActivities = function() {
+    var self = this;
+    self.activities = [];
+
+    return API.requestWithToken(
+      'GET',
+      '/Destiny/' + self.account.type +
+      '/Account/' + self.account.id +
+      '/Character/' + self.id +
+      '/Activities',
+      { definitions : true }
+    ).then(function(resp) {
+      var data = resp.data;
+      var definitions = resp.definitions;
+
+      var activityHash = data.available;
+
+      for(var i = 0; i < activityHash.length; i++) {
+       if(activityHash[i].isCompleted) {
+         var activityType = definitions.activities[activityHash[i].activityHash].activityTypeHash;
+         if(definitions.activityTypes[activityType].activityTypeHash == activityType) {
+           console.log(activityHash[i]);
+           console.log(definitions.activities[activityHash[i].activityHash]);
+         }
+       }
+      }
+
     });
   };
 
