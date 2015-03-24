@@ -180,8 +180,6 @@
       margin-top: 5px;
 
       .armorStats {
-        line-height: 1;
-
         .stat {
           margin-top: 5px;
 
@@ -190,6 +188,8 @@
           }
 
           img {
+            vertical-align: middle;
+            margin-top: -2px;
             margin-right: 5px;
           }
         }
