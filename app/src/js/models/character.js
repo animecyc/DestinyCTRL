@@ -1,8 +1,9 @@
 define([
   'common/api',
   'models/equipment',
-  'models/bucket'
-], function(API, Equipment, Bucket) {
+  'models/bucket',
+  'models/activity'
+], function(API, Equipment, Bucket, Activity) {
   var equipmentBuckets = [
     'BUCKET_BUILD','BUCKET_PRIMARY_WEAPON',
     'BUCKET_SPECIAL_WEAPON','BUCKET_HEAVY_WEAPON',
@@ -36,6 +37,7 @@ define([
     this.background = null;
     this.level = 0;
     this.buckets = [];
+    this.activities = [];
   }
 
   Character.prototype.sync = function() {
@@ -234,31 +236,20 @@ define([
 
   Character.prototype._syncActivities = function() {
     var self = this;
-    self.activities = [];
 
     return API.requestWithToken(
       'GET',
-      '/Destiny/' + self.account.type +
-      '/Account/' + self.account.id +
-      '/Character/' + self.id +
-      '/Activities',
-      { definitions : true }
+      '/Destiny/Stats/ActivityHistory/' + self.account.type +
+      '/' + self.account.id +
+      '/' + self.id,
+      { mode : 'None', definitions : true }
     ).then(function(resp) {
-      var data = resp.data;
+      var activities = resp.data.activities;
       var definitions = resp.definitions;
 
-      var activityHash = data.available;
-
-      for(var i = 0; i < activityHash.length; i++) {
-       if(activityHash[i].isCompleted) {
-         var activityType = definitions.activities[activityHash[i].activityHash].activityTypeHash;
-         if(definitions.activityTypes[activityType].activityTypeHash == activityType) {
-           console.log(activityHash[i]);
-           console.log(definitions.activities[activityHash[i].activityHash]);
-         }
-       }
-      }
-
+      activities.forEach(function(repo) {
+        new Activity(definitions, repo);
+      });
     });
   };
 
