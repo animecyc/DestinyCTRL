@@ -2,8 +2,9 @@ define([
   'common/api',
   'models/equipment',
   'models/bucket',
-  'models/activity'
-], function(API, Equipment, Bucket, Activity) {
+  'models/activity',
+  'models/progression'
+], function(API, Equipment, Bucket, Activity, Progression) {
   var equipmentBuckets = [
     'BUCKET_BUILD','BUCKET_PRIMARY_WEAPON',
     'BUCKET_SPECIAL_WEAPON','BUCKET_HEAVY_WEAPON',
@@ -44,7 +45,8 @@ define([
     return Promise.all([
       this._syncClass(),
       this._syncInventory(),
-      this._syncActivities()
+      this._syncActivities(),
+      this._syncProgression()
     ]);
   };
 
@@ -250,6 +252,28 @@ define([
       activities.forEach(function(repo) {
         new Activity(definitions, repo);
       });
+    });
+  };
+
+  Character.prototype._syncProgression = function() {
+    var self = this;
+
+    return API.requestWithToken(
+      'GET',
+      '/Destiny/' + self.account.type +
+      '/Account/' + self.account.id +
+      '/Character/' + self.id +
+      '/Progression',
+      { definitions : true }
+    ).then(function(resp) {
+      var progressions = resp.data.progressions;
+      var levelProgression = resp.data.levelProgression;
+      var definitions = resp.definitions;
+
+      progressions.forEach(function(repo) {
+        new Progression(definitions, repo);
+      });
+      
     });
   };
 
