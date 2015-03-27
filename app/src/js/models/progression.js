@@ -3,14 +3,13 @@ define(function() {
     var referenceId = repo.progressionHash;
     var proMeta = definitions.progressions[referenceId];
 
-    this.type = {
-      id : proMeta.identifier,
-      name : proMeta.name,
-      level : repo.level,
-      icon : proMeta.icon,
-      progress: repo.progressToNextLevel,
-      next: repo.nextLevelAt
-    };
+    this.id = proMeta.identifier;
+    this.name = proMeta.name;
+    this.level = repo.level;
+    this.icon = 'https://www.bungie.net' + proMeta.icon;
+    this.progress = repo.progressToNextLevel;
+    this.next = repo.nextLevelAt;
+
   }
 
   return Progression;

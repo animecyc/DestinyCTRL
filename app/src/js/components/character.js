@@ -24,6 +24,7 @@ define([
         self.set({
           initialized : true,
           level : character.level,
+          levelProgress : character.levelProgression,
           banner : character.background,
           emblem : character.emblem,
           class : character.characterClass.name,
@@ -67,10 +68,11 @@ define([
       var charEmblem = this.get('emblem');
       var charClass = this.get('class');
       var isPrestige = this.get('isPrestige');
+      var progression = this.get('progression');
 
       return m('div.character.twelve', [
-        m('div.character-details.four', [
-          m('div.character-header', {
+        m('div.card.character-details.four', [
+          m('div.card-header.character-header', {
             style : {
               backgroundImage : 'url(' + charBanner + ')'
             }
@@ -86,7 +88,7 @@ define([
               m('div.level.' + (isPrestige ? 'prestige' : ''), charLevel),
             ])
           ]),
-          m('div.character-equipment', [
+          m('div.card-copy.character-equipment', [
             m('ul.items',
               this.get('equipment').map(function(item) {
                 return item.view();
@@ -94,9 +96,17 @@ define([
             )
           ])
         ]),
-        m('div.character-details.three', [
+        m('div.factions.card.three', [
           m('ul',
-          this.get('progression')
+          this.get('progression').map(function(faction){
+            return m('div.faction', [
+              m('div', [
+                m('img.faction-icon', {src: faction.icon}),
+              ]),
+              m('div', 'Level ' + faction.level),
+              m('div', faction.progress + '/' + faction.next),
+            ]);
+          })
           )
         ])
       ]);

@@ -32,10 +32,10 @@ define([
 
   var progressionTypes = [
     'faction_fotc_vanguard', 'faction_pvp',
-    'weekly_pve', 'weekly_pvp', 'faction_pvp_dead_orbit',
-    'faction_pvp_future_war_cult', 'faction_pvp_new_monarchy',
-    'faction_eris', 'faction_event_iron_banner',
-    'faction_event_queen', 'faction_cryptarch'
+    'faction_pvp_dead_orbit','faction_pvp_future_war_cult',
+    'faction_pvp_new_monarchy','faction_eris',
+    'faction_event_iron_banner','faction_event_queen',
+    'faction_cryptarch'
   ];
 
   function Character(account, data) {
@@ -67,9 +67,9 @@ define([
 
   Character.prototype.getProgression = function() {
     return this.progressions.filter(function(type) {
-      return progressionTypes.indexOf(type.type.name) > -1;
+      return progressionTypes.indexOf(type.name) > -1;
     }).reduce(function(memo, type) {
-      var progressions = type.type;
+      var progressions = type;
       return memo.concat(progressions);
     }, []);
   };
@@ -206,7 +206,7 @@ define([
     ).then(function(resp) {
       var repo = resp.data;
       var definitions = resp.definitions;
-
+      
       self.level = repo.characterLevel;
       self.isPrestige = repo.isPrestigeLevel;
       self.emblem = 'https://www.bungie.net/' +
@@ -226,6 +226,12 @@ define([
         name : classDef.className,
         gender : genderDef.genderName,
         race : raceDef.raceName
+      };
+      self.levelProgression = {
+        progress : repo.levelProgression.progressToNextLevel,
+        nextLevel : repo.levelProgression.nextLevelAt,
+        lightProgress : repo.characterBase.stats.STAT_LIGHT.value,
+        lightNextLevel : repo.characterBase.stats.STAT_LIGHT.value
       };
     });
   };
