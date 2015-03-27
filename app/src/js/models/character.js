@@ -30,6 +30,14 @@ define([
     'STRIKE_WEEKLY'
   ];
 
+  var progressionTypes = [
+    'faction_fotc_vanguard', 'faction_pvp',
+    'weekly_pve', 'weekly_pvp', 'faction_pvp_dead_orbit',
+    'faction_pvp_future_war_cult', 'faction_pvp_new_monarchy',
+    'faction_eris', 'faction_event_iron_banner',
+    'faction_event_queen', 'faction_cryptarch'
+  ];
+
   function Character(account, data) {
     this.account = account;
 
@@ -39,6 +47,7 @@ define([
     this.level = 0;
     this.buckets = [];
     this.activities = [];
+    this.progressions = [];
   }
 
   Character.prototype.sync = function() {
@@ -53,6 +62,15 @@ define([
   Character.prototype.getInventory = function() {
     return this.buckets.reduce(function(memo, bucket) {
       return memo.concat(bucket.getItems());
+    }, []);
+  };
+
+  Character.prototype.getProgression = function() {
+    return this.progressions.filter(function(type) {
+      return progressionTypes.indexOf(type.type.name) > -1;
+    }).reduce(function(memo, type) {
+      var progressions = type.type;
+      return memo.concat(progressions);
     }, []);
   };
 
@@ -267,15 +285,15 @@ define([
       { definitions : true }
     ).then(function(resp) {
       var progressions = resp.data.progressions;
-      var levelProgression = resp.data.levelProgression;
       var definitions = resp.definitions;
 
       progressions.forEach(function(repo) {
-        new Progression(definitions, repo);
+        self.progressions.push(new Progression(definitions, repo));
       });
-      
+
     });
   };
+
 
   Character.prototype._getBucketByType = function(type) {
     var _bucket = null;

@@ -1,12 +1,16 @@
 define(function() {
   function Progression(definitions, repo) {
-    //console.log(definitions);
     var referenceId = repo.progressionHash;
     var proMeta = definitions.progressions[referenceId];
-    var proTypeHash = proMeta.progressionHash;
-    //console.log(proMeta);
 
-
+    this.type = {
+      id : proMeta.identifier,
+      name : proMeta.name,
+      level : repo.level,
+      icon : proMeta.icon,
+      progress: repo.progressToNextLevel,
+      next: repo.nextLevelAt
+    };
   }
 
   return Progression;

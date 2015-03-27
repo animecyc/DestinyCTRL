@@ -30,10 +30,12 @@ define([
           race : character.characterClass.race,
           gender : character.characterClass.gender,
           isPrestige : character.isPrestige,
-          equipment : []
+          equipment : [],
+          progression : []
         }, true);
 
         var equipment = character.getEquipment(true);
+        var progression = character.getProgression();
 
         if(equipment.length) {
           self.set('equipment', equipment.reduce(function(memo, equipment) {
@@ -41,6 +43,10 @@ define([
           }, []).map(function(item) {
             return new ItemComp(item, true);
           }), true);
+        }
+
+        if(progression.length){
+          self.set('progression', progression);
         }
 
         m.endComputation();
@@ -87,6 +93,11 @@ define([
               })
             )
           ])
+        ]),
+        m('div.character-details.three', [
+          m('ul',
+          this.get('progression')
+          )
         ])
       ]);
     }
