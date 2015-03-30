@@ -32,11 +32,13 @@ define([
           gender : character.characterClass.gender,
           isPrestige : character.isPrestige,
           equipment : [],
-          progression : []
+          progression : [],
+          activities : []
         }, true);
 
         var equipment = character.getEquipment(true);
         var progression = character.getProgression();
+        var activities = character.getActivities();
 
         if(equipment.length) {
           self.set('equipment', equipment.reduce(function(memo, equipment) {
@@ -46,8 +48,12 @@ define([
           }), true);
         }
 
-        if(progression.length){
+        if(progression.length) {
           self.set('progression', progression);
+        }
+
+        if(activities.length) {
+          self.set('activities', activities);
         }
 
         m.endComputation();
@@ -103,11 +109,14 @@ define([
               m('div', [
                 m('img.faction-icon', {src: faction.icon}),
               ]),
-              m('div', 'Level ' + faction.level),
+              m('div.faction-level', 'Level ' + faction.level),
               m('div', faction.progress + '/' + faction.next),
             ]);
           })
           )
+        ]),
+        m('div.card.four', [
+          m('div.activities', 'Weekly')
         ])
       ]);
     }

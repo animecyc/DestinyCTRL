@@ -10,31 +10,29 @@ define(function() {
     var destMeta = definitions.destinations[destHash];
 
     this.period = new Date(repo.period);
-
-    // this.isCompleted = repo.isCompleted;
-
-    this.place = {
-      name : placeMeta.placeName,
-      description : placeMeta.placeDescription
-    };
-
-    this.destination = {
-      id : destMeta.destinationIdentifier,
-      name : destMeta.destinationName,
-      description : destMeta.destinationDescription,
-      icon : destMeta.icon,
-      locationId : destMeta.locationIdentifier
-    };
+    // 
+    // this.place = {
+    //   name : placeMeta.placeName,
+    //   description : placeMeta.placeDescription
+    // };
+    //
+    // this.destination = {
+    //   id : destMeta.destinationIdentifier,
+    //   name : destMeta.destinationName,
+    //   description : destMeta.destinationDescription,
+    //   icon : destMeta.icon,
+    //   locationId : destMeta.locationIdentifier
+    // };
 
     this.type = {
       id : actTypeMeta.identifier,
-      name : actTypeMeta.activityTypeName,
+      name : actMeta.activityName,
       description : actTypeMeta.activityTypeDescription,
-      icon : actTypeMeta.icon
+      icon : actTypeMeta.icon,
+      level : actMeta.activityLevel,
+      completed : repo.values.completed.basic.value // 0 no, 1 yes
     };
   }
-
-
 
   return Activity;
 });

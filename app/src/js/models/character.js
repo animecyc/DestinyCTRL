@@ -31,11 +31,10 @@ define([
   ];
 
   var progressionTypes = [
-    'faction_fotc_vanguard', 'faction_pvp',
+    'faction_fotc_vanguard', 'faction_pvp', 'faction_cryptarch',
     'faction_pvp_dead_orbit','faction_pvp_future_war_cult',
     'faction_pvp_new_monarchy','faction_eris',
-    'faction_event_iron_banner','faction_event_queen',
-    'faction_cryptarch'
+    'faction_event_iron_banner','faction_event_queen'
   ];
 
   function Character(account, data) {
@@ -69,8 +68,20 @@ define([
     return this.progressions.filter(function(type) {
       return progressionTypes.indexOf(type.name) > -1;
     }).reduce(function(memo, type) {
-      var progressions = type;
-      return memo.concat(progressions);
+      var i = progressionTypes.indexOf(type.name);
+      if(i > -1) {
+        memo[i] = type;
+      }
+      return memo;
+    }, []);
+  };
+
+  Character.prototype.getActivities = function() {
+    return this.activities.filter(function(activity) {
+      return activityTypes.indexOf(activity.type.id) > -1;
+    }).reduce(function(memo, activity) {
+      var activities = activity;
+      return memo.concat(activities);
     }, []);
   };
 
@@ -206,7 +217,7 @@ define([
     ).then(function(resp) {
       var repo = resp.data;
       var definitions = resp.definitions;
-      
+
       self.level = repo.characterLevel;
       self.isPrestige = repo.isPrestigeLevel;
       self.emblem = 'https://www.bungie.net/' +
@@ -274,7 +285,7 @@ define([
       var definitions = resp.definitions;
 
       activities.forEach(function(repo) {
-        new Activity(definitions, repo);
+        self.activities.push(new Activity(definitions, repo));
       });
     });
   };
