@@ -53,7 +53,18 @@ define([
         }
 
         if(activities.length) {
-          self.set('activities', activities);
+          self.set('activities', activities.reduce(function(memo, activity) {
+            var start = Date.parse(character.advisors.start.nightfall),
+                reset = Date.parse(character.advisors.reset.nightfall);
+            var time = Date.parse(activity.period);
+            var valid;
+
+            if (time > start && time < reset ){
+             console.log('good');
+             valid = activity;
+            }
+            return memo.concat(valid);
+          }, []));
         }
 
         m.endComputation();
@@ -116,7 +127,22 @@ define([
           )
         ]),
         m('div.card.four', [
-          m('div.activities', 'Weekly')
+          m('div.activities', [
+            m('div.weekly', [
+              // m('div', this.character.advisors.nightfall.name),
+              // m('img', {src : this.character.advisors.nightfall.icon})
+            ]),
+            m('div.nightfall', [
+              m('div', this.character.advisors.nightfall.name),
+              m('img', {src : this.character.advisors.nightfall.icon}),
+              m('div.', (this.get('activities')[0]) ?
+                this.get('activities').map(function(activity) {
+                  if(activity.type.id == 'ACTIVITY_TYPE_NIGHTFALL' && activity.type.completed == 1) {
+                    return 'Complete';
+                  }
+              }) : 'Nope' ),
+            ])
+          ])
         ])
       ]);
     }

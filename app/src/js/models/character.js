@@ -3,8 +3,9 @@ define([
   'models/equipment',
   'models/bucket',
   'models/activity',
-  'models/progression'
-], function(API, Equipment, Bucket, Activity, Progression) {
+  'models/progression',
+  'models/advisor'
+], function(API, Equipment, Bucket, Activity, Progression, Advisor) {
   var equipmentBuckets = [
     'BUCKET_BUILD','BUCKET_PRIMARY_WEAPON',
     'BUCKET_SPECIAL_WEAPON','BUCKET_HEAVY_WEAPON',
@@ -27,7 +28,7 @@ define([
 
   var activityTypes = [
     'ACTIVITY_TYPE_NIGHTFALL', 'ACTIVITY_TYPE_RAID',
-    'STRIKE_WEEKLY'
+    'RAID_MOON1', 'STRIKE_WEEKLY'
   ];
 
   var progressionTypes = [
@@ -47,6 +48,7 @@ define([
     this.buckets = [];
     this.activities = [];
     this.progressions = [];
+    this.advisors = null;
   }
 
   Character.prototype.sync = function() {
@@ -54,7 +56,8 @@ define([
       this._syncClass(),
       this._syncInventory(),
       this._syncActivities(),
-      this._syncProgression()
+      this._syncProgression(),
+      this._syncAdvisor()
     ]);
   };
 
@@ -307,6 +310,22 @@ define([
       progressions.forEach(function(repo) {
         self.progressions.push(new Progression(definitions, repo));
       });
+
+    });
+  };
+
+  Character.prototype._syncAdvisor = function() {
+    var self = this;
+
+    return API.request(
+      'GET',
+      '/Destiny/' +
+      '/Advisors/',
+      { definitions : true }
+    ).then(function(resp) {
+      var advisors = resp.data;
+      var definitions = resp.definitions;
+      self.advisors = new Advisor(definitions, advisors);
 
     });
   };
