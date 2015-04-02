@@ -3,9 +3,10 @@ define([
   'models/equipment',
   'models/bucket',
   'models/activity',
+  'models/raid',
   'models/progression',
   'models/advisor'
-], function(API, Equipment, Bucket, Activity, Progression, Advisor) {
+], function(API, Equipment, Bucket, Activity, Raid, Progression, Advisor) {
   var equipmentBuckets = [
     'BUCKET_BUILD','BUCKET_PRIMARY_WEAPON',
     'BUCKET_SPECIAL_WEAPON','BUCKET_HEAVY_WEAPON',
@@ -47,6 +48,8 @@ define([
     this.level = 0;
     this.buckets = [];
     this.activities = [];
+    this.raidInfo = {};
+    this.raids = [];
     this.progressions = [];
     this.advisors = null;
   }
@@ -56,6 +59,7 @@ define([
       this._syncClass(),
       this._syncInventory(),
       this._syncActivities(),
+      this._syncRaids(),
       this._syncProgression(),
       this._syncAdvisor()
     ]);
@@ -85,6 +89,17 @@ define([
     }).reduce(function(memo, activity) {
       var activities = activity;
       return memo.concat(activities);
+    }, []);
+  };
+
+  Character.prototype.getRaids = function() {
+    return this.raids
+    // .filter(function(raid) {
+    //   return activityTypes.indexOf(activity.type.id) > -1;
+    // })
+    .reduce(function(memo, raid) {
+      var raids = raid;
+      return memo.concat(raids);
     }, []);
   };
 
@@ -235,6 +250,7 @@ define([
       var genderHash = repo.characterBase.genderHash;
       var genderDef = definitions.genders[genderHash];
 
+      self.lastPlayed = repo.characterBase.dateLastPlayed;
       self.characterClass = {
         type : repo.characterBase.classType,
         name : classDef.className,
@@ -291,6 +307,40 @@ define([
       activities.forEach(function(repo) {
         self.activities.push(new Activity(definitions, repo));
       });
+    });
+  };
+
+  Character.prototype._syncRaids = function() {
+    var self = this;
+
+    return API.requestWithToken(
+      'GET',
+      '/Destiny/Stats/ActivityHistory/' + self.account.type +
+      '/' + self.account.id +
+      '/' + self.id,
+      { mode : 'Raid', definitions : true }
+    ).then(function(resp) {
+      var raids = resp.data.activities;
+      var definitions = resp.definitions;
+
+      self.raidInfo = {
+        vault : {
+          name : definitions.activities[2659248068].activityName,
+          description : definitions.activities[2659248068].activityDescription,
+          icon : 'https://www.bungie.net' + definitions.activities[2659248068].icon
+        },
+        crota : {
+          name : definitions.activities[1836893116].activityName,
+          description : definitions.activities[1836893116].activityDescription,
+          icon : 'https://www.bungie.net' + definitions.activities[1836893116].icon
+        },
+      };
+      
+      if(raids) {
+        raids.forEach(function(repo) {
+          self.raids.push(new Raid(definitions, repo));
+        });
+      }
     });
   };
 
