@@ -1,12 +1,13 @@
 .factions {
   padding: 0.75em;
   text-align: center;
+  ul { display: inline-block; }
 }
 .faction {
   width: 80px;
   margin-bottom: 8px;
   padding: 0;
-  float: left;
+  display: inline-block;
 }
 .faction-icon {
   height: 32px;

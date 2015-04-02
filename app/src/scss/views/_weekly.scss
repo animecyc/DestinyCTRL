@@ -1,3 +1,41 @@
 .activities {
-  img { width: 10%; }
+  padding: 0.75em;
+  .complete {
+    color: #080808;
+    font-weight: bold;
+  }
 }
+
+.weekly {
+  position: relative;
+  margin-bottom: 10px;
+  img {
+    width: 40px;
+    float: left;
+    margin-right: 5px;
+  }
+  .info {
+
+  }
+  .title {
+    font-size: 14px;
+  }
+  .description {
+    /* position: absolute;
+    top: 5px; */
+  }
+
+}
+ .raid {
+   width: 50%;
+   float: left;
+   img {
+     width: 40px;
+     float: left;
+     margin-right: 5px;
+   }
+   .title {
+     font-size: 14px;
+   }
+   .complete { font-size: 10px; }
+ }
