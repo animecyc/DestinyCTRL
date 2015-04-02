@@ -279,12 +279,13 @@ define([
 
     return API.requestWithToken(
       'GET',
-      '/Destiny/Stats/ActivityHistory/' + self.account.type +
-      '/' + self.account.id +
-      '/' + self.id,
-      { mode : 'None', definitions : true }
+      '/Destiny/' + self.account.type +
+      '/Account/' + self.account.id +
+      '/Character/' + self.id +
+      '/Activities',
+      { definitions : true }
     ).then(function(resp) {
-      var activities = resp.data.activities;
+      var activities = resp.data.available;
       var definitions = resp.definitions;
 
       activities.forEach(function(repo) {
