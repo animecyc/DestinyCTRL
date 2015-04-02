@@ -33,12 +33,15 @@ define([
           isPrestige : character.isPrestige,
           equipment : [],
           progression : [],
-          activities : []
+          activities : [],
+          raids : []
         }, true);
 
         var equipment = character.getEquipment(true);
         var progression = character.getProgression();
         var activities = character.getActivities();
+        var raids = character.getRaids();
+        // console.log(character);
 
         if(equipment.length) {
           self.set('equipment', equipment.reduce(function(memo, equipment) {
@@ -53,17 +56,38 @@ define([
         }
 
         if(activities.length) {
-          self.set('activities', activities.reduce(function(memo, activity) {
+          self.set('activities', activities
+          .filter(function(activity) {
             var start = Date.parse(character.advisors.start.nightfall),
-                reset = Date.parse(character.advisors.reset.nightfall);
-            var time = Date.parse(activity.period);
-            var valid;
+                reset = Date.parse(character.advisors.reset.nightfall),
+                time = Date.parse(character.lastPlayed),
+                valid;
 
             if (time > start && time < reset ){
-             console.log('good');
-             valid = activity;
+              valid = activity;
+              return valid;
             }
-            return memo.concat(valid);
+          })
+          .reduce(function(memo, activity) {
+              return memo.concat(activity);
+          }, []));
+        }
+
+        if(raids.length) {
+          self.set('raids', raids
+          .filter(function(raid) {
+            var start = Date.parse(character.advisors.start.nightfall),
+                reset = Date.parse(character.advisors.reset.nightfall),
+                time = Date.parse(raid.period),
+                valid;
+
+            if (time > start && time < reset ){
+              valid = raid;
+              return valid;
+            }
+          })
+          .reduce(function(memo, raid) {
+              return memo.concat(raid);
           }, []));
         }
 
@@ -126,22 +150,65 @@ define([
           })
           )
         ]),
-        m('div.card.four', [
-          m('div.activities', [
-            m('div.weekly', [
-              // m('div', this.character.advisors.nightfall.name),
-              // m('img', {src : this.character.advisors.nightfall.icon})
-            ]),
-            m('div.nightfall', [
-              m('div', this.character.advisors.nightfall.name),
-              m('img', {src : this.character.advisors.nightfall.icon}),
-              m('div.', (this.get('activities')[0]) ?
-                this.get('activities').map(function(activity) {
-                  if(activity.type.id == 'ACTIVITY_TYPE_NIGHTFALL' && activity.type.completed == 1) {
-                    return 'Complete';
-                  }
-              }) : 'Nope' ),
+        m('div.activities.card.four', [
+          m('div.weekly', [
+            m('img', {src : this.character.advisors.weekly[0].icon}),
+            m('div.info', [
+              m('div.title', this.character.advisors.weekly[0].name),
+              m('div.description', this.character.advisors.weekly[0].description),
+            m('div', (this.get('activities').length !== 0) ?
+
+            m('div.complete',
+              this.get('activities').map(function(activity) {
+                if(activity.type.id == 'STRIKE_WEEKLY' && activity.type.completed === true) {
+                   return 'Level ' + activity.type.level + ' ';
+                }
+              })
+            )
+              : 'Hasn\'t played' ),
             ])
+          ]),
+          m('div.weekly.nightfall', [
+            m('img', {src : this.character.advisors.nightfall.icon}),
+            m('div.info', [
+              m('div.title', this.character.advisors.nightfall.name),
+              m('div.description', this.character.advisors.nightfall.description),
+              m('div', (this.get('activities').length !== 0) ?
+                this.get('activities').map(function(activity) {
+                  if(activity.type.id == 'ACTIVITY_TYPE_NIGHTFALL' && activity.type.completed === true) {
+                     return m('div.complete','Complete');
+                  }
+                })
+                : 'No activities' )
+            ]),
+          ]),
+          m('div.raid.vault', [
+            m('img', {src : this.character.raidInfo.vault.icon}),
+            m('div.info', [
+              m('div.title', 'Vault of Glass'),
+
+              m('div', (this.get('raids').length !== 0) ?
+                this.get('raids').map(function(raid) {
+                  if(raid.type.id == 'ACTIVITY_TYPE_RAID' && raid.type.completed === 1) {
+                     return m('div.complete','Completed at level ' + raid.type.level);
+                  }
+                })
+                : 'No activities' )
+              ])
+          ]),
+          m('div.raid.crota', [
+            m('img', {src : this.character.raidInfo.crota.icon}),
+            m('div.info', [
+              m('div.title', 'Crota\'s End'),
+
+              m('div', (this.get('raids').length !== 0) ?
+                this.get('raids').map(function(raid) {
+                  if(raid.type.id == 'RAID_MOON1' && raid.type.completed === 1) {
+                     return m('div.complete','Completed at level ' + raid.type.level);
+                  }
+                })
+                : 'No activities' )
+              ])
           ])
         ])
       ]);
