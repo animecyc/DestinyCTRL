@@ -93,11 +93,7 @@ define([
   };
 
   Character.prototype.getRaids = function() {
-    return this.raids
-    // .filter(function(raid) {
-    //   return activityTypes.indexOf(activity.type.id) > -1;
-    // })
-    .reduce(function(memo, raid) {
+    return this.raids.reduce(function(memo, raid) {
       var raids = raid;
       return memo.concat(raids);
     }, []);
@@ -335,7 +331,7 @@ define([
           icon : 'https://www.bungie.net' + definitions.activities[1836893116].icon
         },
       };
-      
+
       if(raids) {
         raids.forEach(function(repo) {
           self.raids.push(new Raid(definitions, repo));
