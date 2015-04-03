@@ -10,24 +10,24 @@ define(function() {
     var weeklyHashes = [repo.heroicStrikeHashes[0], repo.heroicStrikeHashes[1], repo.heroicStrikeHashes[2]];
     var dailyHashes = [repo.dailyChapterHashes[0], repo.dailyChapterHashes[1], repo.dailyChapterHashes[2]];
     var dailyCrucibleHash = repo.dailyCrucibleHash;
-
-    this.daily = [
-      {
-        name : definitions.activities[dailyHashes[0]].activityName,
-        description : definitions.activities[dailyHashes[0]].activityDescription,
-        icon : 'https://www.bungie.net' + definitions.activities[dailyHashes[0]].icon
-      },
-      {
-        name : definitions.activities[dailyHashes[1]].activityName,
-        description : definitions.activities[dailyHashes[1]].activityDescription,
-        icon : 'https://www.bungie.net' + definitions.activities[dailyHashes[1]].icon
-      },
-      {
-        name : definitions.activities[dailyHashes[2]].activityName,
-        description : definitions.activities[dailyHashes[2]].activityDescription,
-        icon : 'https://www.bungie.net' + definitions.activities[dailyHashes[2]].icon
-      }
-    ];
+// console.log(dailyHashes);
+//     this.daily = [
+//       {
+//         name : definitions.activities[dailyHashes[0]].activityName,
+//         description : definitions.activities[dailyHashes[0]].activityDescription,
+//         icon : 'https://www.bungie.net' + definitions.activities[dailyHashes[0]].icon
+//       },
+//       {
+//         name : definitions.activities[dailyHashes[1]].activityName,
+//         description : definitions.activities[dailyHashes[1]].activityDescription,
+//         icon : 'https://www.bungie.net' + definitions.activities[dailyHashes[1]].icon
+//       },
+//       {
+//         name : definitions.activities[dailyHashes[2]].activityName,
+//         description : definitions.activities[dailyHashes[2]].activityDescription,
+//         icon : 'https://www.bungie.net' + definitions.activities[dailyHashes[2]].icon
+//       }
+//     ];
 
     this.crucible = {
       name : definitions.activities[dailyCrucibleHash].activityName,
