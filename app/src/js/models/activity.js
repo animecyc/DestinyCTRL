@@ -1,6 +1,6 @@
 define(function() {
   function Activity(definitions, repo) {
-    var referenceId = repo.activityDetails.referenceId;
+    var referenceId = repo.activityHash;
     var actMeta = definitions.activities[referenceId];
     var actTypeHash = actMeta.activityTypeHash;
     var actTypeMeta = definitions.activityTypes[actTypeHash];
