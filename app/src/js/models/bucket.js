@@ -16,10 +16,12 @@ define([
     for(var idx in repo.items) {
       var item = repo.items[idx];
 
-      if(item.isEquipment) {
-        this.items.push(new Equipment(definitions, item));
-      } else {
-        this.items.push(new Item(definitions, item));
+      if(definitions.items[item.itemHash]) {
+        if(item.isEquipment) {
+          this.items.push(new Equipment(definitions, item));
+        } else {
+          this.items.push(new Item(definitions, item));
+        }
       }
     }
   }
