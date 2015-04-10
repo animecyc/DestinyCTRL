@@ -9,11 +9,14 @@
 .weekly {
   position: relative;
   margin-bottom: 10px;
-  img {
-    width: 40px;
+
+  .icon {
+    height: 50px;
     float: left;
     margin-right: 5px;
+    img { width: 40px; }
   }
+
   .info {
 
   }

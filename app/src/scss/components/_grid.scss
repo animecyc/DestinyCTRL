@@ -13,3 +13,5 @@
 .ten { @include span-columns(10); }
 .eleven { @include span-columns(11); }
 .twelve { @include span-columns(12); }
+
+.last { @include omega(); }

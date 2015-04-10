@@ -150,9 +150,11 @@ define([
           })
           )
         ]),
-        m('div.activities.card.four', [
+        m('div.activities.card.five.last', [
           m('div.weekly', [
-            m('img', {src : this.character.advisors.weekly[0].icon}),
+            m('div.icon', [
+              m('img', {src : this.character.advisors.weekly[0].icon}),
+            ]),
             m('div.info', [
               m('div.title', this.character.advisors.weekly[0].name),
               m('div.description', this.character.advisors.weekly[0].description),
@@ -165,11 +167,13 @@ define([
                 }
               })
             )
-              : 'Hasn\'t played' ),
+              : '' ),
             ])
           ]),
           m('div.weekly.nightfall', [
-            m('img', {src : this.character.advisors.nightfall.icon}),
+            m('div.icon', [
+              m('img', {src : this.character.advisors.nightfall.icon}),
+            ]),
             m('div.info', [
               m('div.title', this.character.advisors.nightfall.name),
               m('div.description', this.character.advisors.nightfall.description),
@@ -179,7 +183,7 @@ define([
                      return m('div.complete','Complete');
                   }
                 })
-                : 'No activities' )
+                : '' )
             ]),
           ]),
           m('div.raid.vault', [
@@ -193,7 +197,7 @@ define([
                      return m('div.complete','Completed at level ' + raid.type.level);
                   }
                 })
-                : 'No activities' )
+                : '' )
               ])
           ]),
           m('div.raid.crota', [
@@ -207,7 +211,7 @@ define([
                      return m('div.complete','Completed at level ' + raid.type.level);
                   }
                 })
-                : 'No activities' )
+                : '' )
               ])
           ])
         ])
